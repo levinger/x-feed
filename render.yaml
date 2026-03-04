@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: x-news-feed
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: FETCH_INTERVAL_MINUTES
+        value: "15"
+      - key: TWEETS_PER_KEYWORD
+        value: "50"
+      - key: FEED_PAGE_SIZE
+        value: "50"
+    disk:
+      name: app-data
+      mountPath: /var/data
+      sizeGB: 1

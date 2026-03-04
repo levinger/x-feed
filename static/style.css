@@ -1,0 +1,296 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0f1117;
+  --surface: #1a1d27;
+  --border:  #2a2d3a;
+  --text:    #e8eaf0;
+  --muted:   #8b8fa8;
+  --accent:  #1d9bf0;
+  --danger:  #e0245e;
+  --radius:  12px;
+}
+
+html { background: var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 640px;
+  margin: 0 auto;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* Header */
+header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+header h1 { font-size: 18px; font-weight: 700; }
+
+#refresh-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  border-radius: 8px;
+  transition: background 0.1s;
+}
+#refresh-btn:active { background: var(--surface); }
+#refresh-btn.spinning { animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Keyword pills */
+#keyword-nav {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
+}
+#keyword-nav::-webkit-scrollbar { display: none; }
+
+.pill {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.pill.active { border-color: var(--accent); color: var(--accent); background: rgba(29,155,240,0.08); }
+
+/* Add keyword form */
+#add-keyword-form {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+#add-keyword-form input {
+  flex: 1;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+#add-keyword-form input:focus { border-color: var(--accent); }
+#add-keyword-form button {
+  padding: 9px 18px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Pull-to-refresh */
+#ptr-indicator {
+  text-align: center;
+  padding: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  display: none;
+}
+
+/* Tweet cards */
+.tweet-card {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.tweet-card:active { background: var(--surface); }
+
+.tweet-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.tweet-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.tweet-meta { flex: 1; min-width: 0; }
+.tweet-name   { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tweet-handle { color: var(--muted); font-size: 13px; }
+
+.keyword-badge {
+  flex-shrink: 0;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(29,155,240,0.1);
+  border: 1px solid rgba(29,155,240,0.3);
+  color: var(--accent);
+}
+
+.tweet-content {
+  font-size: 15px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 10px;
+  line-height: 1.55;
+}
+
+.tweet-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.tweet-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  margin-left: auto;
+}
+.tweet-footer a:active { text-decoration: underline; }
+
+/* Empty state */
+.empty-state {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 15px;
+}
+.empty-state p { margin-bottom: 8px; }
+
+/* Load more */
+#load-more {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 16px;
+  padding: 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+#load-more:active { background: var(--border); }
+
+/* Account panel */
+#account-panel {
+  margin: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+#account-panel summary {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--muted);
+  user-select: none;
+  list-style: none;
+}
+#account-panel summary::before { content: "▶ "; font-size: 10px; }
+#account-panel[open] summary::before { content: "▼ "; }
+
+#account-panel-content { padding: 0 16px 16px; }
+
+#account-list { margin-bottom: 12px; }
+.account-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.account-item .acc-name { flex: 1; }
+.account-status { font-size: 12px; }
+.account-status.ok    { color: #4caf50; }
+.account-status.err   { color: var(--danger); }
+.account-delete {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+#add-account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#add-account-form input {
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+#add-account-form input:focus { border-color: var(--accent); }
+#add-account-form button {
+  padding: 11px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.hidden { display: none !important; }
+
+/* Pill delete button */
+.pill { display: inline-flex; align-items: center; gap: 5px; }
+.pill-label { cursor: pointer; }
+.pill-delete {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0 2px;
+  border-radius: 50%;
+  transition: color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.pill:hover .pill-delete,
+.pill-delete:hover { color: var(--danger); }

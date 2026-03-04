@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>X Feed</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>X Feed</h1>
+    <button id="refresh-btn" aria-label="Refresh">&#8635;</button>
+  </header>
+
+  <nav id="keyword-nav">
+    <button class="pill active" data-keyword="">All</button>
+  </nav>
+
+  <form id="add-keyword-form">
+    <input type="text" id="keyword-input" placeholder="Add keyword..." autocomplete="off">
+    <button type="submit">+</button>
+  </form>
+
+  <div id="ptr-indicator">&#8635; Release to refresh</div>
+
+  <main id="feed">
+    <div id="tweet-list"></div>
+    <button id="load-more" class="hidden">Load more</button>
+  </main>
+
+  <details id="account-panel">
+    <summary>Manage X Accounts</summary>
+    <div id="account-panel-content">
+      <div id="account-list"></div>
+      <form id="add-account-form">
+        <input type="text"     name="username"       placeholder="@username" autocomplete="off">
+        <input type="password" name="password"       placeholder="Password">
+        <input type="email"    name="email"          placeholder="Email">
+        <input type="password" name="email_password" placeholder="Email password">
+        <input type="text"     name="cookies"        placeholder="Cookies: ct0=...; auth_token=...  (recommended)">
+        <button type="submit">Add Account</button>
+      </form>
+      <p class="hint">Tip: get cookies from browser DevTools → Application → Cookies → x.com</p>
+    </div>
+  </details>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
