@@ -41,6 +41,12 @@ CREATE TABLE IF NOT EXISTS fetch_log (
     ran_at     TEXT NOT NULL DEFAULT (datetime('now')),
     error      TEXT
 );
+
+CREATE TABLE IF NOT EXISTS account_credentials (
+    username   TEXT PRIMARY KEY,
+    cookies    TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 """
 
 
@@ -155,3 +161,26 @@ def log_fetch(keyword: str, tweets_new: int, error: Optional[str] = None):
             "INSERT INTO fetch_log (keyword, tweets_new, error) VALUES (?,?,?)",
             (keyword, tweets_new, error),
         )
+
+
+# --- Account credentials ---
+
+def save_account_credentials(username: str, cookies: str):
+    with get_connection() as conn:
+        conn.execute(
+            "INSERT OR REPLACE INTO account_credentials (username, cookies) VALUES (?, ?)",
+            (username, cookies),
+        )
+
+
+def delete_account_credentials(username: str):
+    with get_connection() as conn:
+        conn.execute("DELETE FROM account_credentials WHERE username = ?", (username,))
+
+
+def get_stored_accounts() -> list[dict]:
+    with get_connection() as conn:
+        rows = conn.execute(
+            "SELECT username, cookies FROM account_credentials"
+        ).fetchall()
+        return [dict(r) for r in rows]

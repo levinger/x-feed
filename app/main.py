@@ -8,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.database import init_db
 from app.scheduler import start_scheduler, stop_scheduler, fetch_all_keywords
+from app.scraper import restore_accounts
 from app.routers import feed, keywords, accounts
 
 logging.basicConfig(level=logging.INFO)
@@ -16,6 +17,7 @@ logging.basicConfig(level=logging.INFO)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    await restore_accounts()
     start_scheduler()
     yield
     stop_scheduler()

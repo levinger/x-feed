@@ -86,9 +86,32 @@ async def add_account(
         username, password, email, email_password,
         cookies=cookies,
     )
-    if not cookies:
+    if cookies:
+        from app.database import save_account_credentials
+        save_account_credentials(username, cookies)
+    else:
         await api.pool.login_all()
     return True
+
+
+async def restore_accounts():
+    """Re-register accounts from our DB into twscrape on startup."""
+    from app.database import get_stored_accounts
+    accounts = get_stored_accounts()
+    if not accounts:
+        return
+    api = get_api()
+    restored = 0
+    for acc in accounts:
+        try:
+            await api.pool.add_account(
+                acc["username"], "", "", "",
+                cookies=acc["cookies"],
+            )
+            restored += 1
+        except Exception:
+            pass  # "already exists" is expected — not fatal
+    logger.info(f"[scraper] Restored {restored} account(s) from DB.")
 
 
 async def get_accounts() -> list[dict]:
@@ -110,5 +133,7 @@ async def delete_account(username: str):
     async with aiosqlite.connect(settings.get_accounts_db_path()) as db:
         await db.execute("DELETE FROM accounts WHERE username = ?", (username,))
         await db.commit()
+    from app.database import delete_account_credentials
+    delete_account_credentials(username)
     global _api
     _api = None
