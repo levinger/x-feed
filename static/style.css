@@ -93,7 +93,7 @@ header h1 { font-size: 18px; font-weight: 700; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   color: var(--text);
-  font-size: 14px;
+  font-size: 16px;
   outline: none;
 }
 #add-keyword-form input:focus { border-color: var(--accent); }
@@ -255,7 +255,7 @@ header h1 { font-size: 18px; font-weight: 700; }
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text);
-  font-size: 14px;
+  font-size: 16px;
   outline: none;
 }
 #add-account-form input:focus { border-color: var(--accent); }
