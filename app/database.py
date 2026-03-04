@@ -93,6 +93,9 @@ def add_keyword(keyword: str) -> dict:
 
 def delete_keyword(keyword_id: int):
     with get_connection() as conn:
+        row = conn.execute("SELECT keyword FROM keywords WHERE id = ?", (keyword_id,)).fetchone()
+        if row:
+            conn.execute("DELETE FROM tweets WHERE keyword = ?", (row["keyword"],))
         conn.execute("DELETE FROM keywords WHERE id = ?", (keyword_id,))
 
 
