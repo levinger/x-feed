@@ -61,6 +61,9 @@ def get_connection():
 def init_db():
     with get_connection() as conn:
         conn.executescript(DDL)
+        conn.execute(
+            "DELETE FROM tweets WHERE keyword NOT IN (SELECT keyword FROM keywords)"
+        )
 
 
 # --- Keywords ---
