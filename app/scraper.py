@@ -66,6 +66,7 @@ def _normalize(tweet, keyword: str) -> dict:
         "author_username": tweet.user.username,
         "author_name":     tweet.user.displayname,
         "author_avatar":   tweet.user.profileImageUrl,
+        "author_verified": bool(getattr(tweet.user, "verified", False) or getattr(tweet.user, "isBlueVerified", False)),
         "tweet_url":       tweet.url,
         "like_count":      tweet.likeCount,
         "retweet_count":   tweet.retweetCount,
