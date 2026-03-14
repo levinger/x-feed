@@ -108,6 +108,49 @@ header h1 { font-size: 18px; font-weight: 700; }
   font-weight: 600;
 }
 
+/* Filter bar */
+#filter-bar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(29,155,240,0.08);
+}
+
+/* Verified badge icon */
+.verified-icon {
+  width: 18px;
+  height: 18px;
+  fill: var(--accent);
+  flex-shrink: 0;
+}
+.inline-verified {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-left: 3px;
+  position: relative;
+  top: -1px;
+}
+
 /* Pull-to-refresh */
 #ptr-indicator {
   text-align: center;

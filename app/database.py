@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS tweets (
     author_username TEXT NOT NULL,
     author_name     TEXT NOT NULL,
     author_avatar   TEXT,
+    author_verified INTEGER NOT NULL DEFAULT 0,
     tweet_url       TEXT NOT NULL,
     like_count      INTEGER NOT NULL DEFAULT 0,
     retweet_count   INTEGER NOT NULL DEFAULT 0,
@@ -67,6 +68,10 @@ def get_connection():
 def init_db():
     with get_connection() as conn:
         conn.executescript(DDL)
+        # Migrate existing databases that lack the author_verified column
+        cols = {row[1] for row in conn.execute("PRAGMA table_info(tweets)")}
+        if "author_verified" not in cols:
+            conn.execute("ALTER TABLE tweets ADD COLUMN author_verified INTEGER NOT NULL DEFAULT 0")
         conn.execute(
             "DELETE FROM tweets WHERE keyword NOT IN (SELECT keyword FROM keywords)"
         )
@@ -118,12 +123,14 @@ def upsert_tweets(tweets: list[dict]) -> int:
                 """
                 INSERT OR IGNORE INTO tweets
                   (tweet_id, keyword, content, author_username, author_name,
-                   author_avatar, tweet_url, like_count, retweet_count, reply_count, tweeted_at)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?)
+                   author_avatar, author_verified, tweet_url, like_count,
+                   retweet_count, reply_count, tweeted_at)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
                 """,
                 (
                     t["tweet_id"], t["keyword"], t["content"],
                     t["author_username"], t["author_name"], t["author_avatar"],
+                    int(t.get("author_verified", False)),
                     t["tweet_url"], t["like_count"], t["retweet_count"],
                     t["reply_count"], t["tweeted_at"],
                 ),
@@ -137,6 +144,7 @@ def get_feed(
     limit: int = 50,
     offset: int = 0,
     before: Optional[str] = None,
+    verified_only: bool = False,
 ) -> list[dict]:
     query = "SELECT * FROM tweets WHERE 1=1"
     params: list = []
@@ -146,6 +154,8 @@ def get_feed(
     if before:
         query += " AND tweeted_at < ?"
         params.append(before)
+    if verified_only:
+        query += " AND author_verified = 1"
     query += " ORDER BY tweeted_at DESC LIMIT ? OFFSET ?"
     params += [limit, offset]
     with get_connection() as conn:
