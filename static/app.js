@@ -1,5 +1,6 @@
 const state = {
   keyword: null,
+  verifiedOnly: false,
   offset: 0,
   hasMore: false,
   loading: false,
@@ -20,6 +21,7 @@ async function loadFeed(reset = true) {
 
     const params = new URLSearchParams({ limit: 50, offset: state.offset });
     if (state.keyword) params.set("keyword", state.keyword);
+    if (state.verifiedOnly) params.set("verified_only", "true");
 
     const res  = await fetch(`/api/feed?${params}`);
     const data = await res.json();
@@ -62,7 +64,7 @@ function renderTweets(tweets, reset) {
              alt=""
              onerror="this.style.visibility='hidden'">
         <div class="tweet-meta">
-          <div class="tweet-name">${esc(t.author_name)}</div>
+          <div class="tweet-name">${esc(t.author_name)}${t.author_verified ? '<svg class="verified-icon inline-verified" viewBox="0 0 24 24" aria-label="Verified"><path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.9-2.19-3.34-2.19s-2.68.88-3.34 2.19c-1.39-.46-2.9-.2-3.91.81s-1.27 2.52-.81 3.91C1.63 9.33.75 10.57.75 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.27 3.91.81c.66 1.31 1.9 2.19 3.34 2.19s2.68-.88 3.34-2.19c1.39.46 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.36-6.2 6.77z"/></svg>' : ''}</div>
           <div class="tweet-handle">@${esc(t.author_username)}</div>
         </div>
         <span class="keyword-badge">${esc(t.keyword)}</span>
@@ -276,6 +278,15 @@ function relTime(iso) {
   if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
   return new Date(iso).toLocaleDateString();
 }
+
+// ── Verified filter ───────────────────────────────────────────────────
+
+document.getElementById("verified-toggle").addEventListener("click", function () {
+  state.verifiedOnly = !state.verifiedOnly;
+  this.classList.toggle("active", state.verifiedOnly);
+  this.setAttribute("aria-pressed", String(state.verifiedOnly));
+  loadFeed(true);
+});
 
 // ── Init ──────────────────────────────────────────────────────────────
 
